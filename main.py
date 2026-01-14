@@ -1,25 +1,37 @@
 from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
+import pymysql
+import os
 
 app = Flask(__name__)
 
 # ================= DATABASE =================
 def get_db_connection():
-    conn = sqlite3.connect("database.db")
-    conn.row_factory = sqlite3.Row
-    return conn
+    return pymysql.connect(
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT", 3306)),
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
-# Create table
-with get_db_connection() as conn:
-    conn.execute("""
+# Create table (runs on startup)
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            ingame_name TEXT NOT NULL,
-            password TEXT NOT NULL
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(100) NOT NULL,
+            ingame_name VARCHAR(100) NOT NULL,
+            password VARCHAR(255) NOT NULL
         )
     """)
     conn.commit()
+    cursor.close()
+    conn.close()
+
+init_db()
 
 # ================= ROUTES =================
 @app.route("/", methods=["GET", "POST"])
@@ -30,11 +42,13 @@ def home():
         password = request.form["password"]
 
         conn = get_db_connection()
-        conn.execute(
-            "INSERT INTO users (username, ingame_name, password) VALUES (?, ?, ?)",
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO users (username, ingame_name, password) VALUES (%s, %s, %s)",
             (username, ingame_name, password)
         )
         conn.commit()
+        cursor.close()
         conn.close()
 
         return redirect(url_for("home"))
@@ -43,4 +57,4 @@ def home():
 
 # ================= RUN APP =================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <div class="compile">
+        <div class="ian-box">
+            <h2>Create your own gamer account</h2>
+            <p class="subtitle">Please fill in your desired account</p>
+
+            <form method="POST">
+                <div class="form">
+                    <label>Username</label>
+                    <input type="text" name="username" required />
+                </div>
+
+                <div class="form">
+                    <label>In-game Name</label>
+                    <input type="text" name="ingame_name" required />
+                </div>
+
+                <div class="form">
+                    <label>Password</label>
+                    <input type="password" name="password" required />
+                </div>
+
+                <button type="submit" class="aly_submit">Register</button>
+            </form>
+
+            <div class="game-links">
+                <a href="https://https://en.wikipedia.org/wiki/Grand_Theft_Auto_V/V/" target="_blank" rel="noopener">
+                    <img src="{{ url_for('static', filename='images/gta5.jpg') }}" alt="GTA V" />
+                </a>
+                <a href="https://www.callofduty.com/" target="_blank" rel="noopener">
+                    <img src="{{ url_for('static', filename='images/cod.jpg') }}" alt="Call of Duty" />
+                </a>
+                <a href="https://www.crossfirelegend.com/" target="_blank" rel="noopener">
+                    <img src="{{ url_for('static', filename='images/crossfire.jpg') }}" alt="CrossFire" />
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,7 +7,6 @@ app = Flask(__name__)
 # ================= DATABASE CONFIG =================
 database_url = os.getenv("MYSQL_URL")
 
-# Fix Railway mysql:// → mysql+pymysql://
 if database_url and database_url.startswith("mysql://"):
     database_url = database_url.replace(
         "mysql://", "mysql+pymysql://", 1
@@ -27,7 +26,7 @@ class User(db.Model):
     ingame_name = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-# ================= AUTO CREATE TABLE =================
+# ================= CREATE TABLE =================
 with app.app_context():
     db.create_all()
 
@@ -44,9 +43,22 @@ def home():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for("home"))
+        # 👉 Redirect to success page
+        return redirect(url_for("success"))
 
     return render_template("registration.html")
+
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
+
+
+@app.route("/users")
+def view_users():
+    users = User.query.all()
+    return render_template("users.html", users=users)
+
 
 # ================= RUN APP =================
 if __name__ == "__main__":

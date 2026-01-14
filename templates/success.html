@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="compile">
+        <div class="ian-box">
+            <h2>Registration Successful 🎉</h2>
+            <p class="subtitle">Your gamer account has been created.</p>
+
+            <div class="success-buttons">
+                <a href="{{ url_for('home') }}" class="aly_submit">Back to Registration</a>
+                <a href="{{ url_for('view_users') }}" class="aly_submit">View Registered Users</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
